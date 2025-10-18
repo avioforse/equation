@@ -71,6 +71,6 @@ EQUATION = [
 ]
 
 
-@pytest.mark.parametrize("equation, answer", EQUATION)
+@pytest.mark.parametrize(("equation", "answer"), EQUATION)
 def test_solution_of_equation(equation: str, answer: float):
     assert solution_of_equation(equation) == answer

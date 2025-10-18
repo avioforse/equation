@@ -19,7 +19,6 @@ _Tokens = list[str | float]
 
 
 def tokens_in_equation(tokens: _Tokens) -> Equation:
-    print(tokens)
     try:
         index = tokens.index("=")
         operator = Equation
@@ -101,13 +100,10 @@ def solution_of_equation(user_input: str) -> float:
     standart_equation = equation.standardize()
     answer = standart_equation.substitution()
     while True:
-        if not isinstance(answer.right, Value):
-            answer_check = answer.substitution()
-            if print(answer_check) == print(answer):
-                answer = Equation(
-                    left=Subtraction(left=answer.right, right=answer.left),
-                    right=Value(0),
-                ).substitution()
-                continue
-        break
+        if isinstance(answer.right, Value):
+            break
+        answer = Equation(
+            left=Subtraction(left=answer.right, right=answer.left),
+            right=Value(0),
+        ).substitution()
     return float(f"{(answer.right.value) ** answer.left.degree:.2f}")

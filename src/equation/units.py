@@ -10,13 +10,11 @@ class Value(Expression):
         super().__init__()
         self.value = value
 
-    def copy(self):
+    def copy(self) -> type["Value"]:
         return type(self)(self.value)
 
     def __eq__(self, other: Expression) -> bool:
-        if isinstance(other, Value) and other.value == self.value:
-            return True
-        return False
+        return isinstance(other, Value) and other.value == self.value
 
     def __str__(self) -> str:
         if isinstance(self.value, float):
@@ -25,7 +23,7 @@ class Value(Expression):
 
 
 class Variable(Expression):
-    def __init__(self, name: str, degree=1) -> None:
+    def __init__(self, name: str, degree: int = 1) -> None:
         super().__init__()
         self.name = name
         self.degree = degree
@@ -34,9 +32,7 @@ class Variable(Expression):
         return type(self)(self.name)
 
     def __eq__(self, other: "Expression") -> bool:
-        if isinstance(other, Variable) and other.name == self.name:
-            return True
-        return False
+        return isinstance(other, Variable) and other.name == self.name
 
     def __str__(self) -> str:
         return self.name

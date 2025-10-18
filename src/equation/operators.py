@@ -48,7 +48,7 @@ class Negation(UnaryOperation):
 
 
 class Brackets(UnaryOperation):
-    def __init__(self, expr):
+    def __init__(self, expr: Expression) -> None:
         super().__init__(expr)
 
     def __str__(self) -> str:
@@ -59,7 +59,7 @@ class Brackets(UnaryOperation):
 
 
 class BinaryOperator(Operation):
-    def __init__(self, left: Expression, right: Expression):
+    def __init__(self, left: Expression, right: Expression) -> None:
         super().__init__()
         self.left = left
         self.right = right
@@ -72,7 +72,7 @@ class Addition(BinaryOperator):
     def __str__(self) -> str:
         return f"{self.left}+{self.right}"
 
-    def substitution(self) -> "Expression":
+    def substitution(self) -> Expression:
         left = self.left.copy().substitution()
         right = self.right.copy().substitution()
         if isinstance(left, Value):
@@ -92,12 +92,15 @@ class Addition(BinaryOperator):
                     left=left.left,
                     right=Addition(left=left.right, right=Value(1)),
                 )
-        if isinstance(left, Variable):
-            if isinstance(right, Multiplication) and isinstance(right.left, Variable):
-                return Multiplication(
-                    left=left,
-                    right=Addition(left=Value(1), right=right.right).substitution(),
-                ).substitution()
+        if (
+            isinstance(left, Variable)
+            and isinstance(right, Multiplication)
+            and isinstance(right.left, Variable)
+        ):
+            return Multiplication(
+                left=left,
+                right=Addition(left=Value(1), right=right.right).substitution(),
+            ).substitution()
         if (
             isinstance(left, Addition | Subtraction)
             and isinstance(left.right, Value)
@@ -138,12 +141,15 @@ class Subtraction(BinaryOperator):
                     left=left.left,
                     right=Subtraction(left=left.right, right=Value(1)),
                 )
-        if isinstance(left, Variable):
-            if isinstance(right, Multiplication) and isinstance(right.left, Variable):
-                return Multiplication(
-                    left=left,
-                    right=Subtraction(left=Value(1), right=right.right).substitution(),
-                ).substitution()
+        if (
+            isinstance(left, Variable)
+            and isinstance(right, Multiplication)
+            and isinstance(right.left, Variable)
+        ):
+            return Multiplication(
+                left=left,
+                right=Subtraction(left=Value(1), right=right.right).substitution(),
+            ).substitution()
         if (
             isinstance(left, Addition | Subtraction)
             and isinstance(left.right, Value)
@@ -181,12 +187,11 @@ class Multiplication(BinaryOperator):
                     right=Multiplication(left, right_b),
                 )
             return Multiplication(right, left).substitution()
-        if isinstance(left, Multiplication):
-            if isinstance(right, Value):
-                return Multiplication(
-                    left=left.left,
-                    right=Multiplication(left=left.right, right=right).substitution(),
-                )
+        if isinstance(left, Multiplication) and isinstance(right, Value):
+            return Multiplication(
+                left=left.left,
+                right=Multiplication(left=left.right, right=right).substitution(),
+            )
         if isinstance(left, Addition | Subtraction):
             return type(left)(
                 left=Multiplication(left.left, right).substitution(),
@@ -264,9 +269,8 @@ class Equation(BinaryOperator):
     def substitution(self) -> "Expression":
         if isinstance(self.left, Negation) and isinstance(self.right, Negation):
             return Equation(left=self.left.expr, right=self.right.expr).substitution()
-        if isinstance(self.left, Variable):
-            if isinstance(self.right, Value):
-                return self
+        if isinstance(self.left, Variable) and isinstance(self.right, Value):
+            return self
         a = self.left.substitution()
         b = self.right.copy().substitution()
         match a:
@@ -290,7 +294,6 @@ class Equation(BinaryOperator):
                 if isinstance(a, Subtraction):
                     operator = Addition
             case Variable():
-                print(Equation(a, b))
                 return Equation(left=a, right=b)
             case _:
                 raise NotImplementedError
