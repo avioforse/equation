@@ -1,0 +1,19 @@
+[project]
+name = "equation"
+version = "0.1.0"
+description = "Equation calculation toolkit"
+readme = "README.md"
+authors = [
+    { name = "Vladislav A. Proskurov", email = "rilshok@pm.me" }
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest"
+]
+
+[build-system]
+requires = ["uv_build>=0.9.3,<0.10.0"]
+build-backend = "uv_build"
