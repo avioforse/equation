@@ -1,6 +1,6 @@
 import pytest
 
-from equation import solution_of_equation
+from equation.utils import solution_of_equation
 
 
 EQUATION = [
