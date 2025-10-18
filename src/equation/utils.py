@@ -1,7 +1,7 @@
 __all__ = [
-    "tokens_in_equation",
-    "tokenize",
     "solution_of_equation",
+    "tokenize",
+    "tokens_in_equation",
 ]
 
 from .operators import (
@@ -28,7 +28,7 @@ def tokens_in_equation(tokens: _Tokens) -> Equation:
             index_l = tokens.index("(")
             index_r = tokens.index(")")
             tokens[index_l : index_r + 1] = [
-                Brackets(tokens_in_equation(tokens[index_l + 1 : index_r]))
+                Brackets(tokens_in_equation(tokens[index_l + 1 : index_r])),
             ]
             return tokens_in_equation(tokens)
         except ValueError:
@@ -56,7 +56,7 @@ def tokens_in_equation(tokens: _Tokens) -> Equation:
                                 index = tokens.index("-")
                                 if index == 0:
                                     return Negation(
-                                        expr=tokens_in_equation(tokens[index + 1])
+                                        expr=tokens_in_equation(tokens[index + 1]),
                                     )
                             except ValueError:
                                 try:
@@ -85,11 +85,11 @@ def tokenize(user_input: str) -> _Tokens:
                 tokens[-2] += tokens[-1]
                 tokens.pop(-1)
         else:
-            tokens.append(user_input[index])
+            tokens.append(value)
     for index, value in enumerate(tokens):
         if value == ".":
             tokens[index - 1] = float(
-                tokens[index - 1] + tokens[index] + tokens[index + 1]
+                tokens[index - 1] + value + tokens[index + 1],
             )
             tokens.pop(index + 1), tokens.pop(index)
     return tokens

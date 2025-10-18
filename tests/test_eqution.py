@@ -2,7 +2,6 @@ import pytest
 
 from equation.utils import solution_of_equation
 
-
 EQUATION = [
     ["x+10=2", -8],
     ["2+x=10", 8],

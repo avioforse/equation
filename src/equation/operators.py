@@ -1,14 +1,14 @@
 __all__ = [
-    "Operation",
-    "UnaryOperation",
-    "Negation",
-    "Brackets",
-    "BinaryOperator",
     "Addition",
-    "Subtraction",
-    "Multiplication",
+    "BinaryOperator",
+    "Brackets",
     "Division",
     "Equation",
+    "Multiplication",
+    "Negation",
+    "Operation",
+    "Subtraction",
+    "UnaryOperation",
 ]
 
 from .base import Expression
@@ -45,6 +45,7 @@ class Negation(UnaryOperation):
         if isinstance(self.expr, Negation):
             return self.expr.expr
         return self.copy()
+
 
 class Brackets(UnaryOperation):
     def __init__(self, expr):
@@ -109,7 +110,6 @@ class Addition(BinaryOperator):
         return Addition(left, right)
 
 
-
 class Subtraction(BinaryOperator):
     def __str__(self) -> str:
         return f"{self.left}-{self.right}"
@@ -129,7 +129,8 @@ class Subtraction(BinaryOperator):
                 return Multiplication(
                     left=left.left,
                     right=Subtraction(
-                        left=left.right, right=right.right
+                        left=left.right,
+                        right=right.right,
                     ).substitution(),
                 ).substitution()
             if isinstance(right, Variable):
@@ -194,7 +195,6 @@ class Multiplication(BinaryOperator):
         return Multiplication(left, right)
 
 
-
 class Division(BinaryOperator):
     def __str__(self) -> str:
         left = f"{self.left}"
@@ -222,7 +222,8 @@ class Division(BinaryOperator):
                 left_b = right.left
                 right_b = right.right
                 return type(right)(
-                    left=Division(left, left_b), right=Division(left, right_b)
+                    left=Division(left, left_b),
+                    right=Division(left, right_b),
                 )
             return Multiplication(
                 left=Division(Value(1), right),
