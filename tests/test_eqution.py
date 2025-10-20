@@ -1,7 +1,6 @@
 import pytest
 
-from equation import solution_of_equation
-
+from equation.utils import solution_of_equation
 
 EQUATION = [
     ["x+10=2", -8],
@@ -72,6 +71,6 @@ EQUATION = [
 ]
 
 
-@pytest.mark.parametrize("equation, answer", EQUATION)
+@pytest.mark.parametrize(("equation", "answer"), EQUATION)
 def test_solution_of_equation(equation: str, answer: float):
     assert solution_of_equation(equation) == answer
